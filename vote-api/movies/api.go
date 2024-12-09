@@ -8,7 +8,7 @@ import (
 )
 
 var ChosenSeriesImdbIds = []string{
-	"tt0441059",  // Kaamelott
+	"tt0460681",  // Supernatural
 	"tt11126994", // Arcane
 	"tt0386676",  // The office US
 	"tt0944947",  // GOT
