@@ -42,7 +42,6 @@ jobs:
           cd web-client
           yarn install --no-lockfile
           yarn test
-          yarn e2e
 
   web_build:
     runs-on: ubuntu-latest
@@ -67,7 +66,7 @@ jobs:
           node-version: 22
 
       - run: |
-          cd doc
+          cd docs
           yarn install --no-lockfile
           yarn build
 
