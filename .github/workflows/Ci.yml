@@ -37,11 +37,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "false"
 
       - run: |
           cd web-client
-          yarn install
+          yarn install --no-lockfile
           yarn test
           yarn e2e
 
@@ -53,11 +52,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "false"
 
       - run: |
           cd web-client
-          yarn install
+          yarn install --no-lockfile
           yarn build
 
   docs:
@@ -67,11 +65,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "false"
 
       - run: |
           cd doc
-          yarn install
+          yarn install --no-lockfile
           yarn build
 
   push_api_to_registry:
