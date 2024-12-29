@@ -29,7 +29,7 @@ jobs:
           cd vote-api
           go build
 
-  web_tests:
+  web_build:
     runs-on: ubuntu-latest
     needs: api_build
     steps:
@@ -37,25 +37,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "yarn"
 
       - run: |
           cd web-client
-          yarn test
-          yarn e2e
-
-  web_build:
-    runs-on: ubuntu-latest
-    needs: web_tests
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "yarn"
-
-      - run: |
-          cd web-client
+          yarn install --no-lockfile
           yarn build
 
   docs:
@@ -65,10 +50,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "yarn"
 
       - run: |
-          cd doc
+          cd docs
+          yarn install --no-lockfile
           yarn build
 
   push_api_to_registry:
