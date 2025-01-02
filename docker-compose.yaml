@@ -1,0 +1,46 @@
+services:
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vote-api
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  vote-api:
+    build:
+      context: vote-api
+      dockerfile: Dockerfile
+    environment:
+      - PG_URL=postgres://user:password@postgres:5432/vote-api?sslmode=disable
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+
+  web-client:
+    environment:
+      - VOTE_API_BASE_URL=http://vote-api:8080
+    build:
+      context: web-client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - vote-api
+
+networks:
+  default:
+    name: vote-api-network
