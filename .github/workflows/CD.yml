@@ -1,0 +1,42 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: |
+          cd docs
+          yarn install --no-lockfile
+          yarn build
+      - run: npm install netlify-cli -g
+      - run: netlify deploy --prod --dir target/reports/apidocs --auth ${{secrets.NETLIFY_PASSWORD}} --site ${{secrets.NETLIFY_SITE_ID}}
+
+  deploy-vote-api:
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Deploy api
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_API_DEPLOY_HOOK_URL}}
+        run: |
+          curl "$deploy_url"
+
+  deploy-web-client:
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Deploy web
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_WEB_DEPLOY_HOOK_URL}}
+        run: |
+          curl "$deploy_url"
