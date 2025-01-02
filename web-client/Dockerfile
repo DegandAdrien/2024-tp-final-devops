@@ -7,9 +7,19 @@ RUN yarn install
 RUN yarn build
 RUN mv .next/server/pages /app/build
 
-FROM nginx
-RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
-COPY --from=build /app/build /usr/share/nginx/html
+FROM node:23-alpine
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+WORKDIR /app
+
+COPY --from=build /app/ .
+
+RUN chown -R appuser:appgroup /app
+
+USER appuser
+
+EXPOSE 3000
+
+CMD ["yarn", "start"]
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
