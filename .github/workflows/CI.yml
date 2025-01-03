@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - "*"
+      - "**"
 
 jobs:
   web_lint:
@@ -94,7 +94,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Start containers
-        run: docker-compose -f "docker-compose.yml" up -d --build
+        run: docker compose -f "docker-compose.yaml" up -d --build
       - uses: actions/setup-node@v4
         with:
           node-version: 22
