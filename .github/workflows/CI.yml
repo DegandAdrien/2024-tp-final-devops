@@ -103,6 +103,7 @@ jobs:
           yarn install
           yarn playwright install
           yarn test
+          npx playwright install --with-deps
           yarn e2e
 
   format_back:
